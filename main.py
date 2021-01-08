@@ -1,7 +1,4 @@
-import os
-import sys
-
-import pygame, time
+import os, sys, pygame
 
 
 def load_image(name, colorkey=None):
@@ -26,45 +23,51 @@ screen = pygame.display.set_mode(size)
 screen.fill('white')
 pygame.display.set_caption('Сыр')
 clock = pygame.time.Clock()
-image1 = load_image("cheese_stand11.png")
-image2 = load_image("cheese_go11.png")
-image3 = load_image("cheese_go12.png")
+right_st = load_image("cheese_stand11.png")
+right_go1 = load_image("cheese_go11.png")
+right_go2 = load_image("cheese_go12.png")
+left_st = load_image("cheese_stand21.png")
+left_go1 =  load_image("cheese_go21.png")
+left_go2 =  load_image("cheese_go22.png")
 
 
 class Cheese_Go(pygame.sprite.Sprite):
     def __init__(self, group):
         super().__init__(group)
-        self.image = image1
+        self.image = left_st
         self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = 200
         self.cur_frame = 0
-        self.cheese_list = [image1, image2, image3]
+        self.cheese_list = [right_st, right_go1, right_go2,
+                            left_st, left_go1, left_go2]
 
     def update(self, *args):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RIGHT]:
-            self.cur_frame = (self.cur_frame + 1) % len(self.cheese_list)
+            if self.cur_frame >= 3:
+                self.cur_frame = 0
             self.image = self.cheese_list[self.cur_frame]
+            self.cur_frame += 1
             self.rect.x += 8
         elif not(keys[pygame.K_RIGHT]):
-            self.image = self.cheese_list[0]
-        # keys = pygame.key.get_pressed()
-        #
-        # if keys[pygame.K_LEFT]:
-        #     self.image = image2
-        #     self.image = image3
+            if keys[pygame.K_LEFT]:
+                if self.cur_frame < 3 or self.cur_frame == 6:
+                    self.cur_frame = 3
+                self.image = self.cheese_list[self.cur_frame]
+                self.cur_frame += 1
+                self.rect.x -= 8
+            else:
+                if self.image == self.cheese_list[1]\
+                    or self.image == self.cheese_list[2]:
+                    self.image = self.cheese_list[0]
+                elif self.image == self.cheese_list[4]\
+                    or self.image == self.cheese_list[5]:
+                    self.image = self.cheese_list[3]
 
 
 all_sprites = pygame.sprite.Group()
-# cheese = pygame.sprite.Sprite()
-# cheese.image = load_image("cheese_stand11.png")
-# cheese.rect = cheese.image.get_rect()
-# all_sprites.add(cheese)
-# cheese.rect.x = 300
-# cheese.rect.y = 300
-
 Cheese_Go(all_sprites)
 
 
@@ -79,6 +82,6 @@ while running:
     all_sprites.update(event)
 
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(15)
 
 pygame.quit()
