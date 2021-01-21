@@ -28,7 +28,7 @@ latest_move = 'left'
 health = 300
 score = 0
 v = 10
-now_go = 1
+now_go = 0
 back = load_image("back.png")
 right_st = load_image("cheese_stand11.png")
 right_go1 = load_image("cheese_go11.png")
@@ -44,6 +44,9 @@ rat_left = load_image("rat2.png")
 rat_right2 = load_image("rat12.png")
 rat_left2 = load_image("rat22.png")
 rats_list = [rat_right, rat_left, rat_right2, rat_left2]
+
+for_play = pygame.font.SysFont('freesansbold.ttf', 40)
+for_play = for_play.render('PLAY', True, (0, 0, 0))
 
 all_sprites = pygame.sprite.Group()
 
@@ -196,9 +199,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running  = False
-
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pos() >= (width / 2 - 100, height / 2 - 50):
+                if pygame.mouse.get_pos() <= (width / 2 + 100, height / 2 + 50):
+                    now_go = 1
+    screen.blit(back, (0, 0))
     if now_go == 1:
-        screen.blit(back, (0, 0))
         pygame.draw.rect(screen, (255, 0, 0), (20, 450, 300, 30), border_radius=5)
         pygame.draw.rect(screen, (0, 255, 0), (20, 450, health, 30), border_radius=5)
         all_sprites.draw(screen)
@@ -209,8 +215,9 @@ while running:
         if health == 0:
             quit()
         all_sprites.update(event)
-        pygame.display.flip()
-        clock.tick(60)
-
-
+    else:
+        pygame.draw.rect(screen, (0, 100, 200), (width / 2 - 100, height / 2 - 50, 200, 100))
+        screen.blit(for_play, (width / 2 - 35, height / 2 - 15))
+    pygame.display.flip()
+    clock.tick(60)
 pygame.quit()
