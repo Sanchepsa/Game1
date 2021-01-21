@@ -47,6 +47,8 @@ rats_list = [rat_right, rat_left, rat_right2, rat_left2]
 
 for_play = pygame.font.SysFont('freesansbold.ttf', 40)
 for_play = for_play.render('PLAY', True, (0, 0, 0))
+for_loss = pygame.font.SysFont('freesansbold.ttf', 40)
+for_loss = for_loss.render('GAME OVER', True, (0, 0, 0))
 
 all_sprites = pygame.sprite.Group()
 
@@ -55,7 +57,7 @@ class Cheese_Go(pygame.sprite.Sprite):
         super().__init__(group)
         self.image = left_st
         self.rect = self.image.get_rect()
-        self.rect.x = 100
+        self.rect.x = width / 2 - 100
         self.rect.y = 200
         self.cur_frame = 3
         self.cheese_list = [right_st, right_go1, right_go2,
@@ -193,7 +195,6 @@ rat = Rats(all_sprites)
 
 my_bull = Bullet(all_sprites)
 
-
 running = True
 while running:
     for event in pygame.event.get():
@@ -213,11 +214,17 @@ while running:
         txt_score = font_score.render('Score:   ' + str(score), True, (0, 0, 0))
         screen.blit(txt_score, (500, 450))
         if health == 0:
-            quit()
+            now_go = 2
         all_sprites.update(event)
-    else:
-        pygame.draw.rect(screen, (0, 100, 200), (width / 2 - 100, height / 2 - 50, 200, 100))
+    elif now_go == 0:
+        pygame.draw.rect(screen, (0, 100, 200), (width / 2 - 100, height / 2 - 50, 200, 100),
+                         border_radius=20)
         screen.blit(for_play, (width / 2 - 35, height / 2 - 15))
+    else:
+        pygame.draw.rect(screen, (0, 100, 200), (width / 2 - 140, height / 2 - 100, 300, 200),
+                         border_radius=20)
+        screen.blit(for_loss, (width / 2 - 70, height / 2 - 60))
+        screen.blit(txt_score, (width / 2 - 52, height / 2 + 20))
     pygame.display.flip()
     clock.tick(60)
 pygame.quit()
