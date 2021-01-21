@@ -201,9 +201,10 @@ while running:
         if event.type == pygame.QUIT:
             running  = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pos() >= (width / 2 - 100, height / 2 - 50):
-                if pygame.mouse.get_pos() <= (width / 2 + 100, height / 2 + 50):
-                    now_go = 1
+            if now_go != 2:
+                if pygame.mouse.get_pos() >= (width / 2 - 100, height / 2 - 50):
+                    if pygame.mouse.get_pos() <= (width / 2 + 100, height / 2 + 50):
+                        now_go = 1
     screen.blit(back, (0, 0))
     if now_go == 1:
         pygame.draw.rect(screen, (255, 0, 0), (20, 450, 300, 30), border_radius=5)
